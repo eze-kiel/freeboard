@@ -15,25 +15,26 @@
             <h2>Thanks for your new post !</h2>
         </div>
     {{else}}
-    <div class="topnav">
-        <a href="/">Home</a>
-        <a href="/board">Board</a>
-        <a href="/post">Post</a>
-      </div>
-            
+        <div class="topnav">
+            <a href="/">Home</a>
+            <a href="/board">Board</a>
+            <a href="/post">Post</a>
+        </div>
+                
         <div class="content">
             <h2>Share something !</h2>
-            <p style="color: red;">You must enter a text AND a link associated.</p>
+            <p style="color: rgb(210, 0, 0);">You must enter a text AND a link associated.</p>
             <form method="POST">
                 <label>Your post:</label><br />
                 <textarea name="post" rows="10" cols="50" onkeydown="limit(this)" onkeyup="limit(this)"></textarea><br />
+                <p style="font-size: 10px;" >(500 characters max.)</p><br>
                 <label>Link:</label><br />
                 <input type="text" name="link"><br><br>
                 <input type="submit" value="Send">
                 <input type="reset" value="Erase all">
             </form>
         </div>
-        {{end}}
+    {{end}}
 
 </body>
 </html>
