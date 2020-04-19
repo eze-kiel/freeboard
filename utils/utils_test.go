@@ -43,3 +43,23 @@ func TestAuthorizedURL(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthorizedText(t *testing.T) {
+	ts := []struct {
+		input    string
+		expected bool
+	}{
+		{"hey boi", true},
+		{"how are you", true},
+		{"sentence to run tests", false},
+	}
+
+	for _, tc := range ts {
+		t.Run(tc.input, func(t *testing.T) {
+			res := AuthorizedText(tc.input)
+			if res != tc.expected {
+				t.Errorf("got %v, expected %v", res, tc.expected)
+			}
+		})
+	}
+}
