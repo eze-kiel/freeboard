@@ -37,6 +37,7 @@ func HandleFunc() *mux.Router {
 	r.HandleFunc("/board", boardPage)
 	r.HandleFunc("/post", postPage)
 	r.HandleFunc("/rules", rulesPage)
+	r.HandleFunc("/random", randomPage)
 
 	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
 	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/", http.FileServer(http.Dir("views/style/"))))
@@ -142,6 +143,40 @@ func rulesPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func randomPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("views/random.gohtml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	db, err := database.Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	results, err := db.Query("SELECT id, text, link FROM posts ORDER BY RAND() LIMIT 1")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	data := BoardPageData{
+		PageTitle: "Random",
+		Posts:     []Post{},
+	}
+	var sqlPost Post
+	for results.Next() {
+		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link)
+		if err != nil {
+			log.Fatal(err)
+		}
+		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link})
+	}
+	err = tmpl.Execute(w, data)
 	if err != nil {
 		log.Fatal(err)
 	}
