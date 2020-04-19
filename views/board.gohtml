@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <title>FreeBoard</title>
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/board">Board</a>
+        <a href="/post">Post</a>
+    </div>
+    
+    <div class="content">
+
+        <h2>{{.PageTitle}}</h2>
+
+        <div class="postForm">
+
+        </div>
+
+        {{range .Posts}}
+        <div class="post" id="{{.Id}}">
+            <p>
+                Post ID : <a href=#{{.Id}}>#{{.Id}}</a><br><br>
+                &#128221; {{.Text}}<br><br>
+                &#128279; <a href="{{.Link}}">{{.Link}}</a>
+            </p>
+        </div>
+        {{end}} 
+
+      </div>
+
+</body>
+</html>
