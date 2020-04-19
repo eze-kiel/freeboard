@@ -23,3 +23,23 @@ func TestIsURL(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthorizedURL(t *testing.T) {
+	ts := []struct {
+		input    string
+		expected bool
+	}{
+		{"www.google.com", true},
+		{"facebook.com", true},
+		{"http://www.bit.ly", false},
+	}
+
+	for _, tc := range ts {
+		t.Run(tc.input, func(t *testing.T) {
+			res := AuthorizedURL(tc.input)
+			if res != tc.expected {
+				t.Errorf("got %v, expected %v", res, tc.expected)
+			}
+		})
+	}
+}
