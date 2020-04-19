@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"html/template"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/eze-kiel/freeboard/database"
 	"github.com/eze-kiel/freeboard/utils"
@@ -112,18 +113,23 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		text: r.FormValue("post"),
 		link: r.FormValue("link"),
 	}
+	// Content check
 	if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) {
+
+		// Integrity check
 		if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
 			_, err = db.Exec(`INSERT INTO posts (text, link) VALUES (?,?)`, post.text, post.link)
 			if err != nil {
 				log.Fatal(err)
 			}
+
 			tmpl.Execute(w, struct{ Success bool }{true})
 			err = tmpl.Execute(w, nil)
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
+
 	} else {
 		http.Redirect(w, r, "/post", 301)
 	}
