@@ -35,6 +35,7 @@ func HandleFunc() *mux.Router {
 	r.HandleFunc("/", homePage)
 	r.HandleFunc("/board", boardPage)
 	r.HandleFunc("/post", postPage)
+	r.HandleFunc("/rules", rulesPage)
 
 	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
 	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/", http.FileServer(http.Dir("views/style/"))))
@@ -123,5 +124,17 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		http.Redirect(w, r, "http://localhost:8080/post", 301)
+	}
+}
+
+func rulesPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("views/rules.gohtml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
