@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"log"
 
+	// MySQL driver
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/zpatrick/go-config"
 )
 
+// Connect connects to a database
 func Connect() (*sql.DB, error) {
 	dbConf := config.NewYAMLFile("config/db-config.yaml")
 	c := config.NewConfig([]config.Provider{dbConf})

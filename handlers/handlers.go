@@ -10,22 +10,26 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Post represents a post which will be displayed
 type Post struct {
-	Id   int
+	ID   int
 	Text string
 	Link string
 }
 
+// BoardPageData contains the data sent to the board page
 type BoardPageData struct {
 	PageTitle string
 	Posts     []Post
 }
 
+// NewPost contains data sent via the from in Post section
 type NewPost struct {
 	text string
 	link string
 }
 
+// HandleFunc handles functions
 func HandleFunc() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", homePage)
@@ -73,11 +77,11 @@ func boardPage(w http.ResponseWriter, r *http.Request) {
 	}
 	var sqlPost Post
 	for results.Next() {
-		err = results.Scan(&sqlPost.Id, &sqlPost.Text, &sqlPost.Link)
+		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link)
 		if err != nil {
 			log.Fatal(err)
 		}
-		data.Posts = append(data.Posts, Post{Id: sqlPost.Id, Text: sqlPost.Text, Link: sqlPost.Link})
+		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link})
 	}
 	err = tmpl.Execute(w, data)
 	if err != nil {
