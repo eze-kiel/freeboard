@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script type="text/javascript" src="js/char-limit.js"></script>
     <title>FreeBoard</title>
 </head>
 
@@ -25,7 +26,7 @@
             <p style="color: red;">You must enter a text AND a link associated.</p>
             <form method="POST">
                 <label>Your post:</label><br />
-                <textarea name="post" rows="10" cols="50" maxlength="500"></textarea><br />
+                <textarea name="post" rows="10" cols="50" onkeydown="limit(this)" onkeyup="limit(this)"></textarea><br />
                 <label>Link:</label><br />
                 <input type="text" name="link"><br><br>
                 <input type="submit" value="Send">

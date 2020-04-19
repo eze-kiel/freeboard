@@ -32,8 +32,8 @@ func HandleFunc() *mux.Router {
 	r.HandleFunc("/board", boardPage)
 	r.HandleFunc("/post", postPage)
 
-	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/",
-		http.FileServer(http.Dir("views/style/"))))
+	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
+	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/", http.FileServer(http.Dir("views/style/"))))
 
 	return r
 }
