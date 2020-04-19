@@ -123,7 +123,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 	} else {
-		http.Redirect(w, r, "http://localhost:8080/post", 301)
+		http.Redirect(w, r, "/post", 301)
 	}
 }
 
