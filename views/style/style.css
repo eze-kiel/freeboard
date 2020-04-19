@@ -33,7 +33,6 @@ body {
   
 /* Style the content */
 .content {
-    background-color: #ddd;
     padding: 10px;
 }
 
@@ -42,4 +41,6 @@ body {
     border-top: 2px solid #333;
     border-radius: 5px;
     margin-bottom: 5px;
+    width: auto;
+    word-wrap: break-word;
 }
