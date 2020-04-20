@@ -114,11 +114,11 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		text: r.FormValue("post"),
 		link: r.FormValue("link"),
 	}
-	// Content check
-	if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) {
+	// Integrity check
+	if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
 
-		// Integrity check
-		if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
+		// Content check
+		if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) {
 			_, err = db.Exec(`INSERT INTO posts (text, link) VALUES (?,?)`, post.text, post.link)
 			if err != nil {
 				log.Fatal(err)
