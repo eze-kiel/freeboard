@@ -129,6 +129,8 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Fatal(err)
 			}
+		} else {
+			http.Redirect(w, r, "/post", 301)
 		}
 
 	} else {
