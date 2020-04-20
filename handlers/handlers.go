@@ -48,7 +48,7 @@ func HandleFunc() *mux.Router {
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/home.html", "views/header.html", "views/navbar.html")
+	tmpl, err := template.ParseFiles("views/home.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse home page : %v", err)
 	}
@@ -60,7 +60,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func boardPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/board.html", "views/header.html", "views/navbar.html")
+	tmpl, err := template.ParseFiles("views/board.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse board page : %v", err)
 	}
@@ -101,7 +101,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	tmpl, err := template.ParseFiles("views/post.html", "views/header.html", "views/navbar.html")
+	tmpl, err := template.ParseFiles("views/post.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse post page : %v", err)
 	}
@@ -140,7 +140,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func rulesPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/rules.html", "views/header.html", "views/navbar.html")
+	tmpl, err := template.ParseFiles("views/rules.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse rules page : %v", err)
 	}
@@ -152,7 +152,7 @@ func rulesPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func randomPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/random.html", "views/header.html", "views/navbar.html")
+	tmpl, err := template.ParseFiles("views/random.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse random page : %v", err)
 	}
@@ -187,7 +187,7 @@ func randomPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func notFoundPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/404.html", "views/header.html", "views/navbar.html")
+	tmpl, err := template.ParseFiles("views/404.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse 404 page : %v", err)
 	}
