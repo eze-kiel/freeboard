@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style/style.css">
-    <title>FreeBoard</title>
+    {{ template "header.html" }}
 </head>
 
 <body>
     <div class="topnav">
-        <a href="/">Home</a>
-        <a href="/board">Board</a>
-        <a href="/post">Post</a>
-        <a href="/random">Random</a>
-        <p>BETA</p>
-      </div>
+        {{ template "navbar.html" }}
+    </div>
     
     <div class="content">
 
@@ -29,7 +22,7 @@
             <p>
                 Post ID : <a href=#{{.ID}}>#{{.ID}}</a><br><br>
                 &#128221; {{.Text}}<br><br>
-                &#128279; <a href="{{.Link}}">{{.Link}}</a>
+                &#128279; <a href="{{.Link}}" target="_blank">{{.Link}}</a>
             </p>
         </div>
         {{end}} 
