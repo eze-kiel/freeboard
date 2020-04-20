@@ -30,7 +30,14 @@ body {
     background-color: #ddd;
     color: black;
 }
-  
+
+.topnav p {
+    text-align: right;
+    float: right;
+    margin: 10px;
+    color: #f2f2f2;
+}
+
 /* Style the content */
 .content {
     padding: 10px;
