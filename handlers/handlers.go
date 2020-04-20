@@ -38,6 +38,7 @@ func HandleFunc() *mux.Router {
 	r.HandleFunc("/post", postPage)
 	r.HandleFunc("/rules", rulesPage)
 	r.HandleFunc("/random", randomPage)
+	r.NotFoundHandler = http.HandlerFunc(notFoundPage)
 
 	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
 	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/", http.FileServer(http.Dir("views/style/"))))
@@ -182,5 +183,17 @@ func randomPage(w http.ResponseWriter, r *http.Request) {
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		log.Fatalf("Can not execute templates for random page : %v", err)
+	}
+}
+
+func notFoundPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("views/404.html", "views/header.html", "views/navbar.html")
+	if err != nil {
+		log.Fatalf("Can not parse 404 page : %v", err)
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatalf("Can not execute templates for 404 page : %v", err)
 	}
 }
