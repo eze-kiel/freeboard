@@ -49,19 +49,19 @@ func HandleFunc() *mux.Router {
 func homePage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("views/home.html", "views/header.html", "views/navbar.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not parse home page : %v", err)
 	}
 
 	err = tmpl.Execute(w, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not execute templates for home page : %v", err)
 	}
 }
 
 func boardPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("views/board.html", "views/header.html", "views/navbar.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not parse board page : %v", err)
 	}
 
 	db, err := database.Connect()
@@ -89,7 +89,7 @@ func boardPage(w http.ResponseWriter, r *http.Request) {
 	}
 	err = tmpl.Execute(w, data)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not execute templates for board page : %v", err)
 	}
 }
 
@@ -102,7 +102,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.ParseFiles("views/post.html", "views/header.html", "views/navbar.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not parse post page : %v", err)
 	}
 
 	if r.Method != http.MethodPost {
@@ -127,7 +127,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 			tmpl.Execute(w, struct{ Success bool }{true})
 			err = tmpl.Execute(w, nil)
 			if err != nil {
-				log.Fatal(err)
+				log.Fatalf("Can not execute templates for post page : %v", err)
 			}
 		} else {
 			http.Redirect(w, r, "/post", 301)
@@ -141,20 +141,21 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 func rulesPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("views/rules.html", "views/header.html", "views/navbar.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not parse rules page : %v", err)
 	}
 
 	err = tmpl.Execute(w, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not execute templates for rules page : %v", err)
 	}
 }
 
 func randomPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("views/random.html", "views/header.html", "views/navbar.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not parse random page : %v", err)
 	}
+
 	db, err := database.Connect()
 	if err != nil {
 		log.Fatal(err)
@@ -180,6 +181,6 @@ func randomPage(w http.ResponseWriter, r *http.Request) {
 	}
 	err = tmpl.Execute(w, data)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Can not execute templates for random page : %v", err)
 	}
 }
