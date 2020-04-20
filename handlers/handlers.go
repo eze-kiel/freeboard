@@ -47,7 +47,7 @@ func HandleFunc() *mux.Router {
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/home.gohtml")
+	tmpl, err := template.ParseFiles("views/home.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +59,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func boardPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/board.gohtml")
+	tmpl, err := template.ParseFiles("views/board.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	tmpl, err := template.ParseFiles("views/post.gohtml")
+	tmpl, err := template.ParseFiles("views/post.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -137,7 +137,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func rulesPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/rules.gohtml")
+	tmpl, err := template.ParseFiles("views/rules.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -149,7 +149,7 @@ func rulesPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func randomPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/random.gohtml")
+	tmpl, err := template.ParseFiles("views/random.html")
 	if err != nil {
 		log.Fatal(err)
 	}
