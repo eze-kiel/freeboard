@@ -32,3 +32,4 @@ If you have found a bug, you can :
 * Bootstrap
 * Categories tag
 * New About page
+* Logo
