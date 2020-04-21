@@ -6,9 +6,18 @@
 {{ template "header.html" }}
 <body>
     {{if .Success}}
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success" role="alert" style="border-radius: 5px; margin: 10px; border-width: 1px; border-color: green;">
             Thank you for posting !
         </div>
+        <div class="container-fluid">
+            Redirecting you to boards...
+        </div>
+        <!-- Auto redirect insted of button -->
+        <meta http-equiv="refresh" content="1;url=/boards/all" />
+
+        <!-- <div class="container-fluid">
+            <button type="button" class="btn btn-outline-success btn-lg" onclick="location.href = '/boards/all';">Go back to boards</button>
+        </div> -->
     {{else}}
                 
         <div class="content">
