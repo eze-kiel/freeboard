@@ -33,3 +33,10 @@ If you have found a bug, you can :
 * Categories tag
 * New About page
 * Logo
+
+## The team
+
+| The task               | The guy        | Contact                        | GitHub account       |
+|------------------------|----------------|--------------------------------|----------------------|
+| Back/Front dev         | Hugo Blanc     | hugoblanc@fastmail.com         | github.com/eze-kiel  |
+| SysAdmin/Web extension | Baptiste Porte | pporte.baptiste@protonmail.com | github.com/bapt-iste |
