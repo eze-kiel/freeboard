@@ -77,6 +77,11 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	category := vars["category"]
 
+	// Redirect client to /all if a wrong url is entered
+	if utils.CheckCategory(category) != true {
+		http.Redirect(w, r, "/boards/all", 301)
+	}
+
 	data := BoardPageData{
 		PageTitle: strings.Title(category),
 		Posts:     []Post{},
@@ -139,6 +144,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		link:     r.FormValue("link"),
 		category: r.FormValue("category"),
 	}
+
 	// Integrity check
 	if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
 

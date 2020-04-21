@@ -70,6 +70,7 @@ func TestCheckCategory(t *testing.T) {
 		expected bool
 	}{
 		{"nature", true},
+		{"all", true},
 		{"science", true},
 		{"", false},
 		{"alchemy", false},
