@@ -88,6 +88,7 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 		Posts:     []Post{},
 	}
 
+	// Send all the content of the database
 	if category == "all" {
 		results, err := db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC")
 		if err != nil {
@@ -102,6 +103,7 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 			data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
 		}
 
+		// Send only the content of the requested category
 	} else {
 		results, err := db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC", category)
 		if err != nil {
@@ -147,9 +149,11 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Integrity check
+	// Check if link is empty or if text is empty or is url is not an url or if text length is < 500 characters
 	if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
 
 		// Content check
+		// Check if the request contain censured content, or a non-existent category
 		if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) && utils.CheckCategory(post.category) {
 			_, err = db.Exec(`INSERT INTO posts (text, link, category) VALUES (?,?,?)`, post.text, post.link, post.category)
 			if err != nil {
@@ -193,6 +197,7 @@ func randomPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	// Sort a random element frmo the database
 	results, err := db.Query("SELECT id, text, link, category FROM posts ORDER BY RAND() LIMIT 1")
 	if err != nil {
 		log.Fatal(err)
