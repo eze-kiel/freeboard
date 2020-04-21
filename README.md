@@ -23,4 +23,12 @@ Note that you can't send everything : once the Send button pressed, your post go
 ## Bug report :bug:
 If you have found a bug, you can :
 1. open an issue
-1. send me a mail: ezekiel@fastmail.com
+1. send me a mail: hugoblanc@fastmail.com
+
+## Major upgrades
+[21/04]
+* Links on the board page now open a new tab
+* Custom 404 not found page
+* Bootstrap
+* Categories tag
+* New About page
