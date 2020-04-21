@@ -52,7 +52,7 @@ func HandleFunc() *mux.Router {
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/home.html", "views/templates/head.html", "views/templates/header.html")
+	tmpl, err := template.ParseFiles("views/home.html", "views/templates/head.html", "views/templates/header.html", "views/templates/announcements.html")
 	if err != nil {
 		log.Fatalf("Can not parse home page : %v", err)
 	}
