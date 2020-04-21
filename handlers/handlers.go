@@ -36,7 +36,7 @@ type NewPost struct {
 func HandleFunc() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", homePage)
-	r.HandleFunc("/board", boardPage)
+	r.HandleFunc("/boards", boardsPage)
 	r.HandleFunc("/post", postPage)
 	r.HandleFunc("/rules", rulesPage)
 	r.HandleFunc("/random", randomPage)
@@ -61,7 +61,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func boardPage(w http.ResponseWriter, r *http.Request) {
+func boardsPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("views/board.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse board page : %v", err)
