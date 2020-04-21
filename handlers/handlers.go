@@ -3,6 +3,7 @@ package handlers
 import (
 	"html/template"
 	"net/http"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 
@@ -36,15 +37,15 @@ type NewPost struct {
 func HandleFunc() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", homePage)
-	r.HandleFunc("/boards", boardsPage)
 	r.HandleFunc("/post", postPage)
 	r.HandleFunc("/rules", rulesPage)
 	r.HandleFunc("/random", randomPage)
 	r.NotFoundHandler = http.HandlerFunc(notFoundPage)
+	r.HandleFunc("/boards/{category}", boardsPage)
 
 	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
-	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/", http.FileServer(http.Dir("views/style/"))))
-	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
+	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/", http.FileServer(http.Dir("./style/"))))
+	// r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
 
 	return r
 }
@@ -62,34 +63,54 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func boardsPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/board.html", "views/templates/header.html", "views/templates/navbar.html")
+	tmpl, err := template.ParseFiles("views/boards.html", "views/templates/header.html", "views/templates/navbar.html")
 	if err != nil {
 		log.Fatalf("Can not parse board page : %v", err)
 	}
-
 	db, err := database.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	results, err := db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Get category from the URL
+	vars := mux.Vars(r)
+	category := vars["category"]
 
 	data := BoardPageData{
-		PageTitle: "Board",
+		PageTitle: strings.Title(category),
 		Posts:     []Post{},
 	}
-	var sqlPost Post
-	for results.Next() {
-		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
+
+	if category == "all" {
+		results, err := db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC")
 		if err != nil {
 			log.Fatal(err)
 		}
-		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
+		var sqlPost Post
+		for results.Next() {
+			err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
+			if err != nil {
+				log.Fatal(err)
+			}
+			data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
+		}
+
+	} else {
+		results, err := db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC", category)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var sqlPost Post
+		for results.Next() {
+			err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
+			if err != nil {
+				log.Fatal(err)
+			}
+			data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
+		}
 	}
+
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		log.Fatalf("Can not execute templates for board page : %v", err)
