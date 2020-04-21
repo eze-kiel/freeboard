@@ -13,9 +13,10 @@ import (
 
 // Post represents a post which will be displayed
 type Post struct {
-	ID   int
-	Text string
-	Link string
+	ID       int
+	Text     string
+	Link     string
+	Category string
 }
 
 // BoardPageData contains the data sent to the board page
@@ -26,8 +27,9 @@ type BoardPageData struct {
 
 // NewPost contains data sent via the from in Post section
 type NewPost struct {
-	text string
-	link string
+	text     string
+	link     string
+	category string
 }
 
 // HandleFunc handles functions
@@ -71,7 +73,7 @@ func boardPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	results, err := db.Query("SELECT id, text, link FROM posts ORDER BY id DESC")
+	results, err := db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,11 +84,11 @@ func boardPage(w http.ResponseWriter, r *http.Request) {
 	}
 	var sqlPost Post
 	for results.Next() {
-		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link)
+		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
 		if err != nil {
 			log.Fatal(err)
 		}
-		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link})
+		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
 	}
 	err = tmpl.Execute(w, data)
 	if err != nil {
@@ -112,15 +114,16 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post := NewPost{
-		text: r.FormValue("post"),
-		link: r.FormValue("link"),
+		text:     r.FormValue("post"),
+		link:     r.FormValue("link"),
+		category: r.FormValue("category"),
 	}
 	// Integrity check
 	if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
 
 		// Content check
 		if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) {
-			_, err = db.Exec(`INSERT INTO posts (text, link) VALUES (?,?)`, post.text, post.link)
+			_, err = db.Exec(`INSERT INTO posts (text, link, category) VALUES (?,?,?)`, post.text, post.link, post.category)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -163,7 +166,7 @@ func randomPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	results, err := db.Query("SELECT id, text, link FROM posts ORDER BY RAND() LIMIT 1")
+	results, err := db.Query("SELECT id, text, link, category FROM posts ORDER BY RAND() LIMIT 1")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -174,11 +177,11 @@ func randomPage(w http.ResponseWriter, r *http.Request) {
 	}
 	var sqlPost Post
 	for results.Next() {
-		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link)
+		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
 		if err != nil {
 			log.Fatal(err)
 		}
-		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link})
+		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
 	}
 	err = tmpl.Execute(w, data)
 	if err != nil {
