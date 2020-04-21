@@ -13,6 +13,7 @@ body {
 .topnav {
     overflow: hidden;
     background-color: #333;
+    height: 65px;
 }
   
 /* Style the topnav links */
@@ -28,6 +29,7 @@ body {
 /* Change color on hover */
 .topnav a:hover {
     background-color: #ddd;
+    height: 65px;
     color: black;
 }
 
