@@ -51,3 +51,10 @@ body {
     width: auto;
     word-wrap: break-word;
 }
+
+.category-tag span{
+    background-color: #DDEEFF;
+    border-radius: 3px;
+    margin: 5px;
+    padding: 3px;
+}
