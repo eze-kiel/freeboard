@@ -4,7 +4,7 @@ _Free as in Freedom_
 [![Go Report Card](https://goreportcard.com/badge/github.com/eze-kiel/freeboard)](https://goreportcard.com/report/github.com/eze-kiel/freeboard)
 
 ## What is FreeBoard ?
-FreeBoard is a place to share links to others, anonymously.
+[FreeBoard](http://www.freeboard.tech) is a place to share links to others, anonymously.
 You can visit and try it [here](http://www.freeboard.tech). The goal of this platform is to give a user a lot of different content. The more people use FreeBoard, the more it become interesting. There is no votes. No comments. This way, you are not blocked in "trends" or "hot", every post have the same value as another one, despite of the content.
 We wanted FreeBoard to be easy and fast to use, to encourage people sharing their knowledge, or what interest them. It also allow people to gain in visibility sharing their own blogs or projects.
 
