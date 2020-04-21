@@ -38,7 +38,9 @@ body {
 
 
 .post {
-    border-top: 1px solid #333;
+    border-style: groove;
+    padding: 3px;
+    /* border-top: 1px solid #333; */
     border-radius: 5px;
     margin-bottom: 5px;
     width: auto;
