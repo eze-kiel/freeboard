@@ -150,7 +150,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
 
 		// Content check
-		if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) {
+		if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) && utils.CheckCategory(post.category) {
 			_, err = db.Exec(`INSERT INTO posts (text, link, category) VALUES (?,?,?)`, post.text, post.link, post.category)
 			if err != nil {
 				log.Fatal(err)
