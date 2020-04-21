@@ -17,17 +17,21 @@
                 
         <div class="content">
             <h2>Share something !</h2>
-            <p style="color: rgb(210, 0, 0);">You must enter a text AND a link.</p>
-            <p>Note that you can't use URL shortener. The URL have to contain 'https://'</p>
-            <form method="POST">
-                <label>Your post:</label><br />
-                <textarea name="post" rows="10" cols="50" onkeydown="limit(this)" onkeyup="limit(this)"></textarea><br />
-                <p style="font-size: 12px;" >(500 characters max.)</p><br>
-                <label>Link:</label><br />
-                <input type="text" name="link"><br><br>
-                <input type="submit" value="Send">
-                <input type="reset" value="Erase all">
-            </form>
+            <div class="container-fluid">
+                <p style="color: rgb(210, 0, 0);">You must enter a text AND a link.</p>
+                <p>Note that you can't use URL shortener. The URL have to contain 'https://'</p>
+                <form method="POST">
+                    <label for="inputHelpBlock">Your post</label>
+                    <textarea class="form-control" rows="7" onkeydown="limit(this)" onkeyup="limit(this)"></textarea>
+
+                    <p style="font-size: 12px;" >(500 characters max.)</p>
+
+                    <label for="inputHelpBlock">Link</label>
+                    <input type="url" class="form-control" placeholder="http://..."> <br>
+                    <button type="submit" class="btn btn-success">Post</button>
+                    <button type="reset" class="btn btn-default">Erase all</button>
+                </form>
+            </div>
         </div>
     {{end}}
 
