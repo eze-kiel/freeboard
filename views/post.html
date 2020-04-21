@@ -5,29 +5,32 @@
 </head>
 
 <body>
-
     {{if .Success}}
-        <div class="content">
-            <h2>Thanks for your new post !</h2>
+        <div class="alert alert-success" role="alert">
+            Thank you for posting !
         </div>
     {{else}}
-    <div class="topnav">
+
+        <div class="topnav">
         {{ template "navbar.html" }}
       </div>
                 
         <div class="content">
             <h2>Share something !</h2>
             <div class="container-fluid">
-                <p style="color: rgb(210, 0, 0);">You must enter a text AND a link.</p>
+                <div class="alert alert-danger" role="alert">
+                    You must enter a text AND a link.
+                </div>
+                <!-- <p style="color: rgb(210, 0, 0);">You must enter a text AND a link.</p> -->
                 <p>Note that you can't use URL shortener. The URL have to contain 'https://'</p>
                 <form method="POST">
                     <label for="inputHelpBlock">Your post</label>
-                    <textarea class="form-control" rows="7" onkeydown="limit(this)" onkeyup="limit(this)"></textarea>
+                    <textarea class="form-control" name="post" rows="7" placeholder="This link is great because..." onkeydown="limit(this)" onkeyup="limit(this)"></textarea>
 
                     <p style="font-size: 12px;" >(500 characters max.)</p>
 
                     <label for="inputHelpBlock">Link</label>
-                    <input type="url" class="form-control" placeholder="http://..."> <br>
+                    <input type="url" class="form-control" name="link" placeholder="http://..."> <br>
                     <button type="submit" class="btn btn-success">Post</button>
                     <button type="reset" class="btn btn-default">Erase all</button>
                 </form>
