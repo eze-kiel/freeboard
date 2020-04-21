@@ -40,6 +40,7 @@ func HandleFunc() *mux.Router {
 	r.HandleFunc("/post", postPage)
 	r.HandleFunc("/rules", rulesPage)
 	r.HandleFunc("/random", randomPage)
+	r.HandleFunc("/about", aboutPage)
 	r.NotFoundHandler = http.HandlerFunc(notFoundPage)
 	r.HandleFunc("/boards/{category}", boardsPage)
 
@@ -225,5 +226,17 @@ func notFoundPage(w http.ResponseWriter, r *http.Request) {
 	err = tmpl.Execute(w, nil)
 	if err != nil {
 		log.Fatalf("Can not execute templates for 404 page : %v", err)
+	}
+}
+
+func aboutPage(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("views/about.html", "views/templates/head.html", "views/templates/header.html")
+	if err != nil {
+		log.Fatalf("Can not parse about page : %v", err)
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatalf("Can not execute templates for about page : %v", err)
 	}
 }
