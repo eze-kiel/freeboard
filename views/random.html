@@ -23,7 +23,10 @@
                 Post ID : <a href=#{{.ID}}>#{{.ID}}</a><br>
                 &#128221; <b>{{.Text}}</b> <br>
                 &#128279; <a href="{{.Link}}" target="_blank">{{.Link}}</a>
-                <div class="category-tag"><a href="#" target="_blank" class="category-tag"><span>Category</span></a></div>
+                <div class="category-tag">
+                    <a href="#" target="_blank" class="category-tag">
+                    <span>{{.Category}}</span></a>
+                </div>
             </p>
         </div>
         {{end}} 
