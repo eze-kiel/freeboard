@@ -17,7 +17,7 @@ func IsURL(str string) bool {
 
 // AuthorizedURL scans url to verify if there is no unaccepted site inside
 func AuthorizedURL(url string) bool {
-	file, err := os.Open("lists/banned-urls.list")
+	file, err := os.Open("../lists/banned-urls.list")
 
 	if err != nil {
 		log.Fatal(err)
@@ -44,7 +44,7 @@ func AuthorizedURL(url string) bool {
 
 //AuthorizedText checks if unaccepted words or sentences are in the text
 func AuthorizedText(text string) bool {
-	file, err := os.Open("lists/banned-text.list")
+	file, err := os.Open("../lists/banned-text.list")
 
 	if err != nil {
 		log.Fatal(err)
@@ -67,4 +67,17 @@ func AuthorizedText(text string) bool {
 		}
 	}
 	return true
+}
+
+// CheckCategory verifies if a providen category exists
+func CheckCategory(category string) bool {
+	var knownCategories = []string{"arts", "films-series", "music", "nature", "politics-society",
+		"science", "sports", "tech"}
+
+	for _, v := range knownCategories {
+		if category == v {
+			return true
+		}
+	}
+	return false
 }

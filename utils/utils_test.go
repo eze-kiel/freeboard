@@ -63,3 +63,24 @@ func TestAuthorizedText(t *testing.T) {
 		})
 	}
 }
+
+func TestCheckCategory(t *testing.T) {
+	ts := []struct {
+		input    string
+		expected bool
+	}{
+		{"nature", true},
+		{"science", true},
+		{"", false},
+		{"alchemy", false},
+	}
+
+	for _, tc := range ts {
+		t.Run(tc.input, func(t *testing.T) {
+			res := CheckCategory(tc.input)
+			if res != tc.expected {
+				t.Errorf("got %v, expected %v", res, tc.expected)
+			}
+		})
+	}
+}
