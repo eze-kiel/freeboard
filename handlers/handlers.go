@@ -156,8 +156,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 				log.Fatal(err)
 			}
 
-			tmpl.Execute(w, struct{ Success bool }{true})
-			err = tmpl.Execute(w, nil)
+			err = tmpl.Execute(w, struct{ Success bool }{true})
 			if err != nil {
 				log.Fatalf("Can not execute templates for post page : %v", err)
 			}
