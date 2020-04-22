@@ -42,6 +42,7 @@ func HandleFunc() *mux.Router {
 
 	// NotFoundHandler handles routes to /about, /rules and not found
 	r.NotFoundHandler = http.HandlerFunc(defaultPage)
+
 	r.HandleFunc("/boards/{category}", boardsPage)
 
 	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
