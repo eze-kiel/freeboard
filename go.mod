@@ -3,6 +3,8 @@ module github.com/eze-kiel/freeboard
 go 1.14
 
 require (
+	github.com/dgraph-io/badger v1.6.1
+	github.com/dgraph-io/badger/v2 v2.0.3 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-ini/ini v1.55.0 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
