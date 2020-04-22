@@ -38,10 +38,10 @@ func HandleFunc() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", homePage)
 	r.HandleFunc("/post", postPage)
-	r.HandleFunc("/rules", rulesPage)
 	r.HandleFunc("/random", randomPage)
-	r.HandleFunc("/about", aboutPage)
-	r.NotFoundHandler = http.HandlerFunc(notFoundPage)
+
+	// NotFoundHandler handles routes to /about, /rules and not found
+	r.NotFoundHandler = http.HandlerFunc(defaultPage)
 	r.HandleFunc("/boards/{category}", boardsPage)
 
 	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
@@ -49,6 +49,34 @@ func HandleFunc() *mux.Router {
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))))
 
 	return r
+}
+
+func defaultPage(w http.ResponseWriter, r *http.Request) {
+	for _, page := range []string{"about", "rules"} {
+		if strings.Contains(r.RequestURI, page) {
+			tmpl, err := template.ParseFiles("views/"+page+".html", "views/templates/head.html", "views/templates/header.html")
+			if err != nil {
+				log.Fatalf("Can not parse home page : %v", err)
+			}
+
+			err = tmpl.Execute(w, nil)
+			if err != nil {
+				log.Fatalf("Can not execute templates for home page : %v", err)
+			}
+			return
+		}
+	}
+
+	// Redirect to 404 page if not found
+	tmpl, err := template.ParseFiles("views/404.html", "views/templates/head.html", "views/templates/header.html")
+	if err != nil {
+		log.Fatalf("Can not parse home page : %v", err)
+	}
+
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatalf("Can not execute templates for home page : %v", err)
+	}
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -239,18 +267,6 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func rulesPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/rules.html", "views/templates/head.html", "views/templates/header.html")
-	if err != nil {
-		log.Fatalf("Can not parse rules page : %v", err)
-	}
-
-	err = tmpl.Execute(w, nil)
-	if err != nil {
-		log.Fatalf("Can not execute templates for rules page : %v", err)
-	}
-}
-
 func randomPage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("views/random.html", "views/templates/head.html", "views/templates/header.html")
 	if err != nil {
@@ -296,17 +312,5 @@ func notFoundPage(w http.ResponseWriter, r *http.Request) {
 	err = tmpl.Execute(w, nil)
 	if err != nil {
 		log.Fatalf("Can not execute templates for 404 page : %v", err)
-	}
-}
-
-func aboutPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/about.html", "views/templates/head.html", "views/templates/header.html")
-	if err != nil {
-		log.Fatalf("Can not parse about page : %v", err)
-	}
-
-	err = tmpl.Execute(w, nil)
-	if err != nil {
-		log.Fatalf("Can not execute templates for about page : %v", err)
 	}
 }
