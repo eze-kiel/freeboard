@@ -163,6 +163,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 					log.Fatal(err)
 				}
 
+				// Execute Success alert message
 				err = tmpl.Execute(w, struct {
 					Success    bool
 					Timeout    bool
@@ -173,6 +174,7 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 					log.Fatalf("Can not execute templates for post page : %v", err)
 				}
 			} else {
+				// Execute Bad Content alert message
 				err = tmpl.Execute(w, struct {
 					Success    bool
 					Timeout    bool
@@ -184,9 +186,12 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		} else {
+			// Something gone wrong, but a normal user should never arrive here
+			// so there is no alert message
 			http.Redirect(w, r, "/post", 301)
 		}
 	} else {
+		// Execute Anti spam alert message
 		err = tmpl.Execute(w, struct {
 			Success    bool
 			Timeout    bool
