@@ -57,12 +57,12 @@ func defaultPage(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(r.RequestURI, page) {
 			tmpl, err := template.ParseFiles("views/"+page+".html", "views/templates/head.html", "views/templates/header.html")
 			if err != nil {
-				log.Fatalf("Can not parse home page : %v", err)
+				log.Fatalf("Can not parse "+page+" page : %v", err)
 			}
 
 			err = tmpl.Execute(w, nil)
 			if err != nil {
-				log.Fatalf("Can not execute templates for home page : %v", err)
+				log.Fatalf("Can not execute templates for "+page+" page : %v", err)
 			}
 			return
 		}
