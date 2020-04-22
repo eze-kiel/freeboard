@@ -194,15 +194,16 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case post.link == "":
 		integrityCheck = false
-
+		break
 	case post.text == "":
 		integrityCheck = false
-
+		break
 	case !utils.IsURL(post.link):
 		integrityCheck = false
-
+		break
 	case len(post.text) > 500:
 		integrityCheck = false
+		break
 	}
 
 	if !integrityCheck {
@@ -217,12 +218,15 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case !utils.AuthorizedURL(post.link):
 		contentCheck = false
+		break
 
 	case !utils.AuthorizedText(post.text):
 		contentCheck = false
+		break
 
 	case !utils.CheckCategory(post.category):
 		contentCheck = false
+		break
 	}
 
 	if !contentCheck {
