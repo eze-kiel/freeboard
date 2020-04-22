@@ -2,6 +2,7 @@
 _Free as in Freedom_
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/eze-kiel/freeboard)](https://goreportcard.com/report/github.com/eze-kiel/freeboard) 
+![Website](https://img.shields.io/website?url=http%3A%2F%2Fwww.freeboard.tech%2F)
 
 ## What is FreeBoard ?
 [FreeBoard](http://www.freeboard.tech) is a place to share links to others, anonymously.
