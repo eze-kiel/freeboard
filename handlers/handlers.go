@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"html/template"
 	"net/http"
+	"strconv"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
@@ -23,8 +24,13 @@ type Post struct {
 
 // BoardPageData contains the data sent to the board page
 type BoardPageData struct {
-	PageTitle string
-	Posts     []Post
+	PageTitle    string
+	Posts        []Post
+	IsPrevPage   bool
+	IsNextPage   bool
+	CurrentPage  int
+	PreviousPage int
+	NextPage     int
 }
 
 // NewPost contains data sent via the from in Post section
@@ -44,7 +50,22 @@ func HandleFunc() *mux.Router {
 	// NotFoundHandler handles routes to /about, /rules and not found
 	r.NotFoundHandler = http.HandlerFunc(defaultPage)
 
-	r.HandleFunc("/boards/{category}", boardsPage)
+	r.HandleFunc("/boards/{category}/{page}", boardsPage)
+
+	// boardsRouter := r.PathPrefix("/boards/{category}/").Subrouter()
+	// boardsRouter.HandleFunc("", func(w http.ResponseWriter, r *http.Request) {
+	// 	vars := mux.Vars(r)
+	// 	category := vars["category"]
+	// 	http.Redirect(w, r, "/boards/"+category+"/0", 200)
+	// })
+	// boardsRouter.HandleFunc("/{page}", boardsPage)
+
+	r.HandleFunc("/boards/{category}",
+		func(w http.ResponseWriter, r *http.Request) {
+			vars := mux.Vars(r)
+			category := vars["category"]
+			http.Redirect(w, r, "/boards/"+category+"/0", 301)
+		})
 
 	r.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
 	r.PathPrefix("/style/").Handler(http.StripPrefix("/style/", http.FileServer(http.Dir("./style/"))))
@@ -104,26 +125,38 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// Get category from the URL
+	// Get category and page from the URL
 	vars := mux.Vars(r)
 	category := vars["category"]
+	page := vars["page"]
+	limit := 15
 
-	// Redirect client to /all if a wrong url is entered
-	if utils.CheckCategory(category) != true {
-		http.Redirect(w, r, "/boards/all", http.StatusBadRequest)
+	pageNumber, err := strconv.Atoi(page)
+	if err != nil {
+		log.Warn(err)
 	}
 
+	offset := pageNumber * limit
+
+	//Redirect client to /all if a wrong url is entered
+	// if utils.CheckCategory(category) != true {
+	// 	http.Redirect(w, r, "/boards/all/0", 200)
+	// }
+
 	data := BoardPageData{
-		PageTitle: strings.Title(category),
-		Posts:     []Post{},
+		PageTitle:    category,
+		Posts:        []Post{},
+		CurrentPage:  pageNumber,
+		PreviousPage: pageNumber - 1,
+		NextPage:     pageNumber + 1,
 	}
 
 	var results *sql.Rows
 
 	if category == "all" {
-		results, err = db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC")
+		results, err = db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC LIMIT ? OFFSET ?", limit, offset)
 	} else {
-		results, err = db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC", category)
+		results, err = db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC LIMIT ? OFFSET ?", category, limit, offset)
 	}
 
 	if err != nil {
@@ -137,6 +170,18 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
+	}
+
+	if len(data.Posts) == 0 {
+		data.IsNextPage = false
+	} else {
+		data.IsNextPage = true
+	}
+
+	if data.PreviousPage < 0 {
+		data.IsPrevPage = false
+	} else {
+		data.IsPrevPage = true
 	}
 
 	err = tmpl.Execute(w, data)
