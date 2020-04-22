@@ -302,15 +302,3 @@ func randomPage(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Can not execute templates for random page : %v", err)
 	}
 }
-
-func notFoundPage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/404.html", "views/templates/head.html", "views/templates/header.html")
-	if err != nil {
-		log.Fatalf("Can not parse 404 page : %v", err)
-	}
-
-	err = tmpl.Execute(w, nil)
-	if err != nil {
-		log.Fatalf("Can not execute templates for 404 page : %v", err)
-	}
-}
