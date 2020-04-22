@@ -177,8 +177,8 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		category: r.FormValue("category"),
 	}
 
-	// utils.AntiSpam returns false if a RemoteAddr can not post
-	if !utils.AntiSpam(r.RemoteAddr) {
+	// utils.CanClientPost returns false if a RemoteAddr can not post
+	if !utils.CanClientPost(r.RemoteAddr) {
 		// Execute Anti spam alert message
 		err = tmpl.Execute(w, struct {
 			Success    bool

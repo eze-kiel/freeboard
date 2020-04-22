@@ -84,9 +84,9 @@ func CheckCategory(category string) bool {
 	return false
 }
 
-// AntiSpam checks if an ip can post
+// CanClientPost checks if an ip can post
 // It return true if the client can post
-func AntiSpam(ip string) bool {
+func CanClientPost(ip string) bool {
 	var canPost bool = true
 
 	db, err := badger.Open(badger.DefaultOptions("/tmp/badger"))
