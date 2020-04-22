@@ -111,6 +111,9 @@ func AntiSpam(ip string) bool {
 		}
 		return nil
 	})
+	if err != nil {
+		log.Fatalf("Unable to check ip in badger database : %v", err)
+	}
 
 	return canPost
 }
@@ -130,4 +133,7 @@ func AddIPToAntiSpam(ip string) {
 		err := txn.SetEntry(e)
 		return err
 	})
+	if err != nil {
+		log.Fatalf("Unable to add ip to badger database : %v", err)
+	}
 }
