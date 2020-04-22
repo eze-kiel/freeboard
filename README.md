@@ -26,13 +26,14 @@ If you have found a bug, you can :
 1. send me a mail: hugoblanc@fastmail.com
 
 ## Major upgrades
-[21 apr 2020]
+[apr 2020]
 * Links on the board page now open a new tab
 * Custom 404 not found page
 * Bootstrap
 * Categories tag
 * New About page
 * Logo
+* Anti spam
 
 ## The team
 
