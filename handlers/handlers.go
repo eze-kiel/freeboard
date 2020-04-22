@@ -148,49 +148,8 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		category: r.FormValue("category"),
 	}
 
-	if utils.AntiSpam(r.RemoteAddr) {
-		utils.AddIPToAntiSpam(r.RemoteAddr)
-
-		// Integrity check
-		// Check if link is empty or if text is empty or is url is not an url or if text length is < 500 characters
-		if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
-
-			// Content check
-			// Check if the request contain censured content, or a non-existent category
-			if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) && utils.CheckCategory(post.category) {
-				_, err = db.Exec(`INSERT INTO posts (text, link, category) VALUES (?,?,?)`, post.text, post.link, post.category)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				// Execute Success alert message
-				err = tmpl.Execute(w, struct {
-					Success    bool
-					Timeout    bool
-					BadContent bool
-				}{true, false, false})
-
-				if err != nil {
-					log.Fatalf("Can not execute templates for post page : %v", err)
-				}
-			} else {
-				// Execute Bad Content alert message
-				err = tmpl.Execute(w, struct {
-					Success    bool
-					Timeout    bool
-					BadContent bool
-				}{false, false, true})
-
-				if err != nil {
-					log.Fatalf("Can not execute templates for post page : %v", err)
-				}
-			}
-		} else {
-			// Something gone wrong, but a normal user should never arrive here
-			// so there is no alert message
-			http.Redirect(w, r, "/post", 301)
-		}
-	} else {
+	// utils.AntiSpam returns false if a RemoteAddr can not post
+	if !utils.AntiSpam(r.RemoteAddr) {
 		// Execute Anti spam alert message
 		err = tmpl.Execute(w, struct {
 			Success    bool
@@ -201,7 +160,83 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatalf("Can not execute templates for post page : %v", err)
 		}
+
+		return
 	}
+
+	// Add RemoteAddr to AntiSpam list
+	utils.AddIPToAntiSpam(r.RemoteAddr)
+
+	// Integrity check
+	// Check if link is empty or if text is empty or is url is not an url or if text length is < 500 characters
+	integrityCheck := true
+
+	switch {
+	case post.link == "":
+		integrityCheck = false
+
+	case post.text != "":
+		integrityCheck = false
+
+	case !utils.IsURL(post.link):
+		integrityCheck = false
+
+	case len(post.text) <= 500:
+		integrityCheck = false
+	}
+
+	if !integrityCheck {
+		// Something gone wrong, but a normal user should never arrive here
+		// so there is no alert message, but BadRequest status code (400)
+		http.Redirect(w, r, "/post", 400)
+	}
+
+	// Content check
+	// Check if the request contain censured content, or a non-existent category
+	contentCheck := true
+	switch {
+	case !utils.AuthorizedURL(post.link):
+		contentCheck = false
+
+	case !utils.AuthorizedText(post.text):
+		contentCheck = false
+
+	case !utils.CheckCategory(post.category):
+		contentCheck = false
+	}
+
+	if !contentCheck {
+		// Execute Bad Content alert message
+		err = tmpl.Execute(w, struct {
+			Success    bool
+			Timeout    bool
+			BadContent bool
+		}{false, false, true})
+
+		if err != nil {
+			log.Fatalf("Can not execute templates for post page : %v", err)
+		}
+
+		return
+	}
+
+	// All verification checks passed
+	_, err = db.Exec(`INSERT INTO posts (text, link, category) VALUES (?,?,?)`, post.text, post.link, post.category)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Execute Success alert message
+	err = tmpl.Execute(w, struct {
+		Success    bool
+		Timeout    bool
+		BadContent bool
+	}{true, false, false})
+
+	if err != nil {
+		log.Fatalf("Can not execute templates for post page : %v", err)
+	}
+
 }
 
 func rulesPage(w http.ResponseWriter, r *http.Request) {
