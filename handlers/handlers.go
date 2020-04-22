@@ -110,7 +110,7 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 
 	// Redirect client to /all if a wrong url is entered
 	if utils.CheckCategory(category) != true {
-		http.Redirect(w, r, "/boards/all", 301)
+		http.Redirect(w, r, "/boards/all", http.StatusBadRequest)
 	}
 
 	data := BoardPageData{
