@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"html/template"
 	"net/http"
 	"strings"
@@ -117,35 +118,25 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 		Posts:     []Post{},
 	}
 
-	// Send all the content of the database
-	if category == "all" {
-		results, err := db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC")
-		if err != nil {
-			log.Fatal(err)
-		}
-		var sqlPost Post
-		for results.Next() {
-			err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
-			if err != nil {
-				log.Fatal(err)
-			}
-			data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
-		}
+	var results *sql.Rows
 
-		// Send only the content of the requested category
+	if category == "all" {
+		results, err = db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC")
 	} else {
-		results, err := db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC", category)
+		results, err = db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC", category)
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var sqlPost Post
+	for results.Next() {
+		err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
 		if err != nil {
 			log.Fatal(err)
 		}
-		var sqlPost Post
-		for results.Next() {
-			err = results.Scan(&sqlPost.ID, &sqlPost.Text, &sqlPost.Link, &sqlPost.Category)
-			if err != nil {
-				log.Fatal(err)
-			}
-			data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
-		}
+		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
 	}
 
 	err = tmpl.Execute(w, data)
