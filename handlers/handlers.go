@@ -195,13 +195,13 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 	case post.link == "":
 		integrityCheck = false
 
-	case post.text != "":
+	case post.text == "":
 		integrityCheck = false
 
 	case !utils.IsURL(post.link):
 		integrityCheck = false
 
-	case len(post.text) <= 500:
+	case len(post.text) > 500:
 		integrityCheck = false
 	}
 
