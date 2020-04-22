@@ -17,6 +17,12 @@
         </div>
 
     {{end}}
+    {{if .BadContent}}
+        <div class="alert alert-danger" role="alert" style="margin: 10px; border-radius: 5px;">
+            Your post was not sent because it contains inappropriate content.
+        </div>
+
+    {{end}}
                 
         <div class="content">
             <h2>Share something !</h2>

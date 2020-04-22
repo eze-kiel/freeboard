@@ -164,24 +164,34 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 				}
 
 				err = tmpl.Execute(w, struct {
-					Success bool
-					Timeout bool
-				}{true, false})
+					Success    bool
+					Timeout    bool
+					BadContent bool
+				}{true, false, false})
 
 				if err != nil {
 					log.Fatalf("Can not execute templates for post page : %v", err)
 				}
 			} else {
-				http.Redirect(w, r, "/post", 301)
+				err = tmpl.Execute(w, struct {
+					Success    bool
+					Timeout    bool
+					BadContent bool
+				}{false, false, true})
+
+				if err != nil {
+					log.Fatalf("Can not execute templates for post page : %v", err)
+				}
 			}
 		} else {
 			http.Redirect(w, r, "/post", 301)
 		}
 	} else {
 		err = tmpl.Execute(w, struct {
-			Success bool
-			Timeout bool
-		}{false, true})
+			Success    bool
+			Timeout    bool
+			BadContent bool
+		}{false, true, false})
 
 		if err != nil {
 			log.Fatalf("Can not execute templates for post page : %v", err)
