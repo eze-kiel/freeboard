@@ -5,7 +5,9 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
+	"github.com/dgraph-io/badger"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -80,4 +82,52 @@ func CheckCategory(category string) bool {
 		}
 	}
 	return false
+}
+
+// AntiSpam checks if an ip can post
+// It return true if the client can post
+func AntiSpam(ip string) bool {
+	var canPost bool = true
+
+	db, err := badger.Open(badger.DefaultOptions("/tmp/badger"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Check if ip is already in badger database
+	err = db.View(func(txn *badger.Txn) error {
+		opts := badger.DefaultIteratorOptions
+		opts.PrefetchValues = false
+		it := txn.NewIterator(opts)
+		defer it.Close()
+		for it.Rewind(); it.Valid(); it.Next() {
+			item := it.Item()
+			k := item.Key()
+			// fmt.Printf("key=%s\n", k)
+			if string(k) == ip {
+				canPost = false
+			}
+		}
+		return nil
+	})
+
+	return canPost
+}
+
+// AddIPToAntiSpam adds a ip to waiting list to avoid spamming
+func AddIPToAntiSpam(ip string) {
+	db, err := badger.Open(badger.DefaultOptions("/tmp/badger"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Add ip to badger database
+	err = db.Update(func(txn *badger.Txn) error {
+		// WithTTL parameter is the delay between each post
+		e := badger.NewEntry([]byte(ip), []byte("Waiting")).WithTTL(time.Minute * 3)
+		err := txn.SetEntry(e)
+		return err
+	})
 }

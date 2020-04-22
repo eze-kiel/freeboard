@@ -148,26 +148,31 @@ func postPage(w http.ResponseWriter, r *http.Request) {
 		category: r.FormValue("category"),
 	}
 
-	// Integrity check
-	// Check if link is empty or if text is empty or is url is not an url or if text length is < 500 characters
-	if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
+	if utils.AntiSpam(r.RemoteAddr) {
+		utils.AddIPToAntiSpam(r.RemoteAddr)
 
-		// Content check
-		// Check if the request contain censured content, or a non-existent category
-		if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) && utils.CheckCategory(post.category) {
-			_, err = db.Exec(`INSERT INTO posts (text, link, category) VALUES (?,?,?)`, post.text, post.link, post.category)
-			if err != nil {
-				log.Fatal(err)
-			}
+		// Integrity check
+		// Check if link is empty or if text is empty or is url is not an url or if text length is < 500 characters
+		if post.link != "" && post.text != "" && utils.IsURL(post.link) && len(post.text) <= 500 {
 
-			err = tmpl.Execute(w, struct{ Success bool }{true})
-			if err != nil {
-				log.Fatalf("Can not execute templates for post page : %v", err)
+			// Content check
+			// Check if the request contain censured content, or a non-existent category
+			if utils.AuthorizedURL(post.link) && utils.AuthorizedText(post.text) && utils.CheckCategory(post.category) {
+				_, err = db.Exec(`INSERT INTO posts (text, link, category) VALUES (?,?,?)`, post.text, post.link, post.category)
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				err = tmpl.Execute(w, struct{ Success bool }{true})
+				if err != nil {
+					log.Fatalf("Can not execute templates for post page : %v", err)
+				}
+			} else {
+				http.Redirect(w, r, "/post", 301)
 			}
 		} else {
 			http.Redirect(w, r, "/post", 301)
 		}
-
 	} else {
 		http.Redirect(w, r, "/post", 301)
 	}
