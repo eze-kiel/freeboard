@@ -174,7 +174,7 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 
 	if len(data.Posts) == limit+1 {
 		data.IsNextPage = true
-		// Index begins at 0
+		// Index begins at 0 but a half-open range
 		data.Posts = data.Posts[0:limit]
 	} else {
 		data.IsNextPage = false
