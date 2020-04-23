@@ -35,6 +35,7 @@ If you have found a bug, you can :
 * New About page
 * Logo
 * Anti spam
+* HTTPS
 
 ## The team
 
