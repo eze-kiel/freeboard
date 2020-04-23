@@ -10,8 +10,12 @@ import (
 )
 
 func main() {
-	router := handlers.HandleFunc()
-	timeoutRouter := http.TimeoutHandler(router, time.Second*3, "Timeout!")
+	srv := &http.Server{
+		Addr:         ":8080",
+		Handler:      handlers.HandleFunc(),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
 	log.Info("Server is starting, wish me luck boys")
-	log.Fatal(http.ListenAndServe(":8080", timeoutRouter))
+	log.Println(srv.ListenAndServe())
 }
