@@ -74,7 +74,7 @@ func AuthorizedText(text string) bool {
 // CheckCategory verifies if a providen category exists
 func CheckCategory(category string) bool {
 	var knownCategories = []string{"all", "arts", "diy", "films-series", "misc", "music", "nature", "politics-society",
-		"science", "sports", "tech"}
+		"science", "sports", "tech", "til"}
 
 	for _, v := range knownCategories {
 		if category == v {
