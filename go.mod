@@ -3,6 +3,7 @@ module github.com/eze-kiel/freeboard
 go 1.14
 
 require (
+	github.com/caddyserver/certmagic v0.10.12
 	github.com/dgraph-io/badger v1.6.1
 	github.com/dgraph-io/badger/v2 v2.0.3 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
