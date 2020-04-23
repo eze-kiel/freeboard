@@ -52,14 +52,6 @@ func HandleFunc() *mux.Router {
 
 	r.HandleFunc("/boards/{category}/{page}", boardsPage)
 
-	// boardsRouter := r.PathPrefix("/boards/{category}/").Subrouter()
-	// boardsRouter.HandleFunc("", func(w http.ResponseWriter, r *http.Request) {
-	// 	vars := mux.Vars(r)
-	// 	category := vars["category"]
-	// 	http.Redirect(w, r, "/boards/"+category+"/0", 200)
-	// })
-	// boardsRouter.HandleFunc("/{page}", boardsPage)
-
 	r.HandleFunc("/boards/{category}",
 		func(w http.ResponseWriter, r *http.Request) {
 			vars := mux.Vars(r)
