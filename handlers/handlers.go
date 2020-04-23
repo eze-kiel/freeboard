@@ -131,9 +131,9 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 	offset := pageNumber * limit
 
 	//Redirect client to /all if a wrong url is entered
-	// if utils.CheckCategory(category) != true {
-	// 	http.Redirect(w, r, "/boards/all/0", 200)
-	// }
+	if utils.CheckCategory(category) != true {
+		http.Redirect(w, r, "/boards/all/0", 301)
+	}
 
 	data := BoardPageData{
 		PageTitle:    category,
