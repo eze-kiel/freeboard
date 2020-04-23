@@ -154,9 +154,9 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 	var results *sql.Rows
 
 	if category == "all" {
-		results, err = db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC LIMIT ? OFFSET ?", limit, offset)
+		results, err = db.Query("SELECT id, text, link, category FROM posts ORDER BY id DESC LIMIT ? OFFSET ?", limit+1, offset)
 	} else {
-		results, err = db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC LIMIT ? OFFSET ?", category, limit, offset)
+		results, err = db.Query("SELECT id, text, link, category FROM posts WHERE category= ? ORDER BY id DESC LIMIT ? OFFSET ?", category, limit+1, offset)
 	}
 
 	if err != nil {
@@ -172,10 +172,12 @@ func boardsPage(w http.ResponseWriter, r *http.Request) {
 		data.Posts = append(data.Posts, Post{ID: sqlPost.ID, Text: sqlPost.Text, Link: sqlPost.Link, Category: sqlPost.Category})
 	}
 
-	if len(data.Posts) == 0 {
-		data.IsNextPage = false
-	} else {
+	if len(data.Posts) == limit+1 {
 		data.IsNextPage = true
+		// Index begins at 0
+		data.Posts = data.Posts[0:limit]
+	} else {
+		data.IsNextPage = false
 	}
 
 	if data.PreviousPage < 0 {
