@@ -23,19 +23,6 @@
             <a href="/boards/tech" class="category-tag"><span>tech</span></a>
         </p>
 
-        <!-- Pagination -->
-        <br>
-        <div class="container-fluid">
-            {{if .IsPrevPage }}
-            <button type="button" class="btn btn-primary" onclick="window.location='/boards/{{.PageTitle}}/{{.PreviousPage}}';">Previous</button>
-            {{end}}
-            <button type="button" class="btn btn-light">{{.CurrentPage}}</button>
-            {{if .IsNextPage }}
-            <button type="button" class="btn btn-primary" onclick="window.location='/boards/{{.PageTitle}}/{{.NextPage}}';">Next</button>
-            {{end}}
-        </div>
-        <br>
-
         {{range .Posts}}
         <div class="post" id="{{.ID}}">
             <p>
